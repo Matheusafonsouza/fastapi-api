@@ -1,4 +1,6 @@
+from typing import Optional
 from fastapi import FastAPI
+from typing import Optional
 
 app = FastAPI()
 
@@ -9,6 +11,18 @@ def index():
     blog index page
     """
     return {'data': {'name': 'Afonso'}}
+
+
+@app.get('/blog')
+def index(limit: int = 10, published: bool = True, sort: Optional[str] = None):
+    """
+    blogs page
+    """
+    if published:
+        return {'data': {'blogs': f'{limit} published blogs from the database'}}
+    else:
+        return {'data': {'blogs': f'{limit} unpublished blogs from the database'}}
+
 
 
 @app.get('/about')
