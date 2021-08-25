@@ -15,4 +15,9 @@ def about():
 
 @app.get('/blog/{id}')
 def show(id):
-    return {'data': {'id': id}}
+    return {'data': {'id': id}} 
+
+
+@app.get('/blog/{id}/comments')
+def comments(id):
+    return {'data': {'comments': []}}
