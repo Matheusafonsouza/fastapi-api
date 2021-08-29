@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, status, Response, HTTPException
 from blog.schemas import Blog as BlogSchema
 from . import models
 from blog.database import engine, SessionLocal
@@ -16,7 +16,7 @@ def get_db():
 
 app = FastAPI()
 
-@app.post('/blog')
+@app.post('/blog', status_code=status.HTTP_201_CREATED)
 def create(request: BlogSchema, db: Session = Depends(get_db)):
     title = request.title
     body = request.body
@@ -37,6 +37,12 @@ def create(db: Session = Depends(get_db)):
     return blogs
 
 @app.get('/blog/{id}')
-def create(id: int,db: Session = Depends(get_db)):
-    blogs = db.query(Blog).filter(Blog.id == id).first()
-    return blogs
+def create(id: int, response: Response, db: Session = Depends(get_db)):
+    blog = db.query(Blog).filter(Blog.id == id).first()
+
+    if not blog:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f'Blog with the id {id} does not exists.'
+        )
+    return blog
