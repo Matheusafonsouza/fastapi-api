@@ -30,3 +30,13 @@ def create(request: BlogSchema, db: Session = Depends(get_db)):
     db.refresh(blog)
 
     return blog
+
+@app.get('/blog')
+def create(db: Session = Depends(get_db)):
+    blogs = db.query(Blog).all()
+    return blogs
+
+@app.get('/blog/{id}')
+def create(id: int,db: Session = Depends(get_db)):
+    blogs = db.query(Blog).filter(Blog.id == id).first()
+    return blogs
