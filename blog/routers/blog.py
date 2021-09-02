@@ -7,9 +7,12 @@ from typing import List
 from blog.database import get_db
 
 
-router = APIRouter()
+router = APIRouter(
+    prefix='/blog',
+    tags=['blogs']
+)
 
-@router.post('/blog', status_code=status.HTTP_201_CREATED, tags=['blogs'])
+@router.post('/', status_code=status.HTTP_201_CREATED)
 def create(request: BlogSchema, db: Session = Depends(get_db)):
     title = request.title
     body = request.body
@@ -26,7 +29,7 @@ def create(request: BlogSchema, db: Session = Depends(get_db)):
     return blog
 
 
-@router.delete('/blog/{id}', status_code=status.HTTP_204_NO_CONTENT, tags=['blogs'])
+@router.delete('/blog/{id}', status_code=status.HTTP_204_NO_CONTENT)
 def destroy(id, db: Session = Depends(get_db)):
     blog = db.query(Blog).filter(Blog.id == id)
 
@@ -41,7 +44,7 @@ def destroy(id, db: Session = Depends(get_db)):
     return 'done'
 
 
-@router.put('/blog/{id}', status_code=status.HTTP_202_ACCEPTED, tags=['blogs'])
+@router.put('/blog/{id}', status_code=status.HTTP_202_ACCEPTED)
 def update(id, request: BlogSchema, db: Session = Depends(get_db)):
     blog = db.query(Blog).filter(Blog.id == id)
 
@@ -56,13 +59,13 @@ def update(id, request: BlogSchema, db: Session = Depends(get_db)):
     return 'updated'
 
 
-@router.get('/blog', response_model=List[ShowBlog], tags=['blogs'])
+@router.get('/', response_model=List[ShowBlog])
 def list_all(db: Session = Depends(get_db)):
     blogs = db.query(Blog).all()
     return blogs
 
 
-@router.get('/blog/{id}', response_model=ShowBlog, tags=['blogs'])
+@router.get('/blog/{id}', response_model=ShowBlog)
 def show(id: int, response: Response, db: Session = Depends(get_db)):
     blog = db.query(Blog).filter(Blog.id == id).first()
 

@@ -8,9 +8,12 @@ from blog.database import get_db
 from passlib.hash import pbkdf2_sha256
 
 
-router = APIRouter()
+router = APIRouter(
+    prefix='/user',
+    tags=['tags']
+)
 
-@router.post('/user', status_code=status.HTTP_201_CREATED, tags=['users'])
+@router.post('/', status_code=status.HTTP_201_CREATED)
 def create(request: UserSchema, db: Session = Depends(get_db)):
     name = request.name
     email = request.email
@@ -28,7 +31,7 @@ def create(request: UserSchema, db: Session = Depends(get_db)):
     return user
 
 
-@router.delete('/user/{id}', status_code=status.HTTP_204_NO_CONTENT, tags=['users'])
+@router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)
 def destroy(id, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == id)
 
@@ -43,7 +46,7 @@ def destroy(id, db: Session = Depends(get_db)):
     return 'done'
 
 
-@router.put('/user/{id}', status_code=status.HTTP_202_ACCEPTED, tags=['users'])
+@router.put('/{id}', status_code=status.HTTP_202_ACCEPTED)
 def update(id, request: UserSchema, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == id)
 
@@ -58,13 +61,13 @@ def update(id, request: UserSchema, db: Session = Depends(get_db)):
     return 'updated'
 
 
-@router.get('/user', response_model=List[ShowUser], tags=['users'])
+@router.get('/', response_model=List[ShowUser])
 def list_all(db: Session = Depends(get_db)):
     users = db.query(User).all()
     return users
 
 
-@router.get('/user/{id}', response_model=ShowUser, tags=['users'])
+@router.get('/{id}', response_model=ShowUser)
 def show(id: int, response: Response, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == id).first()
 
