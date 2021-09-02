@@ -18,7 +18,7 @@ def get_db():
 
 app = FastAPI()
 
-@app.post('/blog', status_code=status.HTTP_201_CREATED)
+@app.post('/blog', status_code=status.HTTP_201_CREATED, tags=['blogs'])
 def create(request: BlogSchema, db: Session = Depends(get_db)):
     title = request.title
     body = request.body
@@ -34,7 +34,7 @@ def create(request: BlogSchema, db: Session = Depends(get_db)):
     return blog
 
 
-@app.delete('/blog/{id}', status_code=status.HTTP_204_NO_CONTENT)
+@app.delete('/blog/{id}', status_code=status.HTTP_204_NO_CONTENT, tags=['blogs'])
 def destroy(id, db: Session = Depends(get_db)):
     blog = db.query(Blog).filter(Blog.id == id)
 
@@ -49,7 +49,7 @@ def destroy(id, db: Session = Depends(get_db)):
     return 'done'
 
 
-@app.put('/blog/{id}', status_code=status.HTTP_202_ACCEPTED)
+@app.put('/blog/{id}', status_code=status.HTTP_202_ACCEPTED, tags=['blogs'])
 def update(id, request: BlogSchema, db: Session = Depends(get_db)):
     blog = db.query(Blog).filter(Blog.id == id)
 
@@ -64,13 +64,13 @@ def update(id, request: BlogSchema, db: Session = Depends(get_db)):
     return 'updated'
 
 
-@app.get('/blog', response_model=List[ShowBlog])
+@app.get('/blog', response_model=List[ShowBlog], tags=['blogs'])
 def list_all(db: Session = Depends(get_db)):
     blogs = db.query(Blog).all()
     return blogs
 
 
-@app.get('/blog/{id}', response_model=ShowBlog)
+@app.get('/blog/{id}', response_model=ShowBlog, tags=['blogs'])
 def show(id: int, response: Response, db: Session = Depends(get_db)):
     blog = db.query(Blog).filter(Blog.id == id).first()
 
@@ -81,7 +81,7 @@ def show(id: int, response: Response, db: Session = Depends(get_db)):
         )
     return blog
 
-@app.post('/user', status_code=status.HTTP_201_CREATED)
+@app.post('/user', status_code=status.HTTP_201_CREATED, tags=['users'])
 def create(request: UserSchema, db: Session = Depends(get_db)):
     name = request.name
     email = request.email
@@ -99,7 +99,7 @@ def create(request: UserSchema, db: Session = Depends(get_db)):
     return user
 
 
-@app.delete('/user/{id}', status_code=status.HTTP_204_NO_CONTENT)
+@app.delete('/user/{id}', status_code=status.HTTP_204_NO_CONTENT, tags=['users'])
 def destroy(id, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == id)
 
@@ -114,7 +114,7 @@ def destroy(id, db: Session = Depends(get_db)):
     return 'done'
 
 
-@app.put('/user/{id}', status_code=status.HTTP_202_ACCEPTED)
+@app.put('/user/{id}', status_code=status.HTTP_202_ACCEPTED, tags=['users'])
 def update(id, request: UserSchema, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == id)
 
@@ -129,13 +129,13 @@ def update(id, request: UserSchema, db: Session = Depends(get_db)):
     return 'updated'
 
 
-@app.get('/user', response_model=List[ShowUser])
+@app.get('/user', response_model=List[ShowUser], tags=['users'])
 def list_all(db: Session = Depends(get_db)):
     users = db.query(User).all()
     return users
 
 
-@app.get('/user/{id}', response_model=ShowUser)
+@app.get('/user/{id}', response_model=ShowUser, tags=['users'])
 def show(id: int, response: Response, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == id).first()
 
