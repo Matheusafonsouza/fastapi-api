@@ -26,6 +26,7 @@ def create(request: BlogSchema, db: Session = Depends(get_db)):
     blog = Blog(
         title=title,
         body=body,
+        user_id=2
     )
     db.add(blog)
     db.commit()
