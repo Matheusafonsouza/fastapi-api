@@ -5,6 +5,7 @@ from . import models
 from blog.database import engine, SessionLocal
 from sqlalchemy.orm import Session
 from blog.models import Blog, User
+from passlib.hash import pbkdf2_sha256
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -84,12 +85,12 @@ def show(id: int, response: Response, db: Session = Depends(get_db)):
 def create(request: UserSchema, db: Session = Depends(get_db)):
     name = request.name
     email = request.email
-    password = request.password
+    hashed_password = pbkdf2_sha256.hash(request.password)
 
     user = User(
         name=name,
         email=email,
-        password=password,
+        password=hashed_password,
     )
     db.add(user)
     db.commit()
