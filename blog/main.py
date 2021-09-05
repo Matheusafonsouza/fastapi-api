@@ -3,8 +3,10 @@ from . import models
 from blog.database import engine, SessionLocal
 from blog.routers.blog import router as blogRouter
 from blog.routers.user import router as userRouter
+from blog.routers.auth import router as authRouter
 
 models.Base.metadata.create_all(bind=engine)
+
 
 def get_db():
     db = SessionLocal()
@@ -13,7 +15,9 @@ def get_db():
     finally:
         db.close()
 
+
 app = FastAPI()
 
 app.include_router(blogRouter)
 app.include_router(userRouter)
+app.include_router(authRouter)
